@@ -11,8 +11,17 @@ dims()
 transpose()
 {
 	cat $1 > full
-	cut -f 1 full  
-	
+	head -n1 < full > temp
+	wc -w < temp > cols
+	read first last < cols
+	i='0'
+	while [ $first -ne $i ]	
+	do
+	(( i++ ))
+	cut -f $i full > holder
+	tr -s "\n" "\t" < holder >> main
+	done
+	cat main
 }
 if [ "$1" == "dims" ]
 then
