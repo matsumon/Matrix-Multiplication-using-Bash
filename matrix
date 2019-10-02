@@ -1,21 +1,24 @@
-dim()
+dims()
 {
-	if (( 0 == NULL && $# != 1))
-	then
-		1>&2	
-		exit 1
-	else
-		if (( 0 == NULL ))
-		then 
-			cat $1 > 0 
-		fi
-		head -n1 0 > temp
-		wc -l < 0 > dims
-		wc -c < temp >> dims
-		tr -s '\n' ' ' < dims 
-	fi
+	cat $1 > full
+	head -n1 < full > temp
+	wc -l < full > dims
+	wc -w < temp >> dims
+	tr -s '\n' ' ' < dims 
+	rm -rf full temp dims
+	exit '0'
 }
-if (( $1 == dims))
+transpose()
+{
+	cat $1 > full
+	cut -f 1 full  
+	
+}
+if [ "$1" == "dims" ]
 then
-	dim $2
+	dims $2
+	
+elif [ "$1" == "transpose" ]
+then
+	transpose $2
 fi
