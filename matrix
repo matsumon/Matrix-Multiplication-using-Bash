@@ -2,17 +2,20 @@ dim()
 {
 	if (( 0 == NULL && $# != 1))
 	then
-		echo Either no matrix or too many matrices
+		1>&2	
+		exit 1
 	else
 		if (( 0 == NULL ))
 		then 
-			$1 > 0
+			cat $1 > 0 
 		fi
-		head -n -1 0 > temp
-		cat temp
-		wc -l 0 > dims
-		wc -c temp >> dims
-		tr -s "/n" " " < dims 
+		head -n1 0 > temp
+		wc -l < 0 > dims
+		wc -c < temp >> dims
+		tr -s '\n' ' ' < dims 
 	fi
 }
-dim $1
+if (( $1 == dims))
+then
+	dim $2
+fi
