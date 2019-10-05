@@ -1,27 +1,81 @@
 dims()
 {
-	cat $1 > full
+	if [ $# == 1 ]
+	then
+		cat $1 > full
+	else
+		cat > full
+	fi
 	head -n1 < full > temp
 	wc -l < full > dims
 	wc -w < temp >> dims
-	tr -s '\n' ' ' < dims 
-	rm -rf full temp dims
-	exit '0'
+	tr -s '\n' ' ' < dims > main 
+	read line rest < main
+	echo "$line $rest" > main
+	cat main
+	rm -rf full temp dims main
+	return '0'
 }
 transpose()
 {
-	cat $1 > full
+	if [ $# == 1 ]
+	then
+		cat $1 > full
+	else
+		cat > full
+	fi
 	head -n1 < full > temp
 	wc -w < temp > cols
+	row_var=0
+	wc -l < full > rows
+	read num_rows < rows
+	num_rows=$(($num_rows + 1))
 	read first last < cols
 	i='0'
 	while [ $first -ne $i ]	
 	do
 	(( i++ ))
-	cut -f $i full > holder
-	tr -s "\n" "\t" < holder >> main
+	cut -f $i full > newFile
+	tr -s "\n" "\t" < newFile > temp
+	read line < temp  
+	printf "$line\n" >> dim_main	
 	done
-	cat main
+	cat dim_main
+	rm -rf cols rows temp full newFile main
+	return 0
+}
+add()
+{
+	if [[ $# != 2 ]]
+	then
+		1>&2
+		exit 1
+	fi
+	if [[ $(dims $1) != $(dims $2) ]]
+	then 
+		1>&2
+		exit 1
+	fi
+	dims $1> d12
+	cat $1 > m1
+	cat $2 > m2
+	read rows cols < d12
+	i=1
+	while read m1_line rest_m1    
+	do
+		for (( c=1; c<$rows+1; c++))
+		do
+			if [[ $i == $c ]]
+			then
+				head -n$c < m2 >temp_m2
+				tail -n1 < temp_m2 > testing
+		#		cat testing
+			fi
+		done
+		echo "$m1_line"	
+		((i++))
+	done < m1 
+		
 }
 if [ "$1" == "dims" ]
 then
@@ -30,4 +84,8 @@ then
 elif [ "$1" == "transpose" ]
 then
 	transpose $2
+elif [ "$1" == "add" ]
+then
+	add $2 $3
+
 fi
