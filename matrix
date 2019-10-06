@@ -87,9 +87,27 @@ add()
 		((i++))
 	done < m1 
 	cat mainAdd
-	rm -rf m1 m2 testing temp_m2 mainAdd
-		
+	rm -rf m1 m2 testing temp_m2 mainAdd d12
 }
+
+multiply()
+{
+	cat $1 > left
+	cat $2 > right
+	dims < left > m1
+	dims < right > m2
+	read m1_row m1_col < m1
+	read m2_row m2_col < m2
+	if (( $m1_col != $m2_row ))
+	then
+		echo "missmatching matrices"
+		1>&2
+		exit 1
+	else
+		transpose < right >fixedm2
+	fi
+}
+
 if [ "$1" == "dims" ]
 then
 	dims $2
@@ -100,5 +118,7 @@ then
 elif [ "$1" == "add" ]
 then
 	add $2 $3
-
+elif [ "$1" == "multiply" ]
+then
+	multiply $2 $3
 fi
