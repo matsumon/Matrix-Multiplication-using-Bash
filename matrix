@@ -11,9 +11,9 @@ dims()
 	wc -w < temp >> dims
 	tr -s '\n' ' ' < dims > main 
 	read line rest < main
-	echo "$line $rest" > main
-	cat main
-	rm -rf full temp dims main
+	echo -e "$line $rest" > main
+	cat  main
+	rm -rf full temp dims main 
 	return '0'
 }
 transpose()
@@ -38,10 +38,10 @@ transpose()
 	cut -f $i full > newFile
 	tr -s "\n" "\t" < newFile > temp
 	read line < temp  
-	printf "$line\n" >> dim_main	
+	echo -e "$line" >> dim_main	
 	done
 	cat dim_main
-	rm -rf cols rows temp full newFile main
+	rm -rf cols rows temp full newFile dim_main 
 	return 0
 }
 add()
@@ -61,7 +61,7 @@ add()
 	cat $2 > m2
 	read rows cols < d12
 	i=1
-	while read m1_line rest_m1    
+	while read -a m1_array     
 	do
 		for (( c=1; c<$rows+1; c++))
 		do
@@ -69,12 +69,23 @@ add()
 			then
 				head -n$c < m2 >temp_m2
 				tail -n1 < temp_m2 > testing
-		#		cat testing
 			fi
 		done
-		echo "$m1_line"	
+		read -a m2_array < testing
+		for (( d=0; d<$cols; d++))
+		do
+			m1_element=${m1_array[d]}
+			m2_element=${m2_array[d]}
+			added_element=$(expr $m1_element + $m2_element) 
+			if [d -ne $cols-1]
+			then
+			echo -e "$added_element\t" >> mainAdd
+			else
+			echo -e "$added_element" >> mainAdd
+		done
 		((i++))
 	done < m1 
+	rm -rf m1 m2 testing temp_m2
 		
 }
 if [ "$1" == "dims" ]
