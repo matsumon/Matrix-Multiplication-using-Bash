@@ -77,15 +77,17 @@ add()
 			m1_element=${m1_array[d]}
 			m2_element=${m2_array[d]}
 			added_element=$(expr $m1_element + $m2_element) 
-			if [d -ne $cols-1]
+			if (($d != $cols-1))
 			then
-			echo -e "$added_element\t" >> mainAdd
+			echo -ne "$added_element\t" >> mainAdd
 			else
 			echo -e "$added_element" >> mainAdd
+			fi
 		done
 		((i++))
 	done < m1 
-	rm -rf m1 m2 testing temp_m2
+	cat mainAdd
+	rm -rf m1 m2 testing temp_m2 mainAdd
 		
 }
 if [ "$1" == "dims" ]
