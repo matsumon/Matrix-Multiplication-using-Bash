@@ -139,6 +139,39 @@ multiply()
 	cat mainMult
 	rm -rf left right m1 m2 fixedm2 mainMult
 }
+mean()
+{
+	if [ $# == 1 ]
+		then
+			cat $1 > holder
+		else
+			cat > holder
+	fi
+	transpose holder > m1
+	dims m1 > dims_m1
+	read rows cols < dims_m1
+	q=1	
+	while read -a array
+	do
+		sum=0
+		for (( c=0; c<$cols; c++))
+		do
+			sum=$(( $sum + ${array[c]} ))	
+		done
+		if (( $q != $rows ))
+		then
+			total=$(( ($sum + ($cols/2)*( ($sum>0)*2-1 )) / $cols))
+			echo -ne "$total\t" >> mean
+		else
+			total=$(( ($sum + ($cols/2)*( ($sum>0)*2-1 )) / $cols))
+			echo -e "$total" >> mean
+		fi
+		((q++))
+	done < m1
+	cat mean
+	rm -rf dims_m1 m1 holder mean
+
+}
 
 if [ "$1" == "dims" ]
 then
@@ -153,4 +186,7 @@ then
 elif [ "$1" == "multiply" ]
 then
 	multiply $2 $3
+elif [ "$1" == "mean" ]
+then
+	mean $2 
 fi
