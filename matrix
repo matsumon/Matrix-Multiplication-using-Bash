@@ -137,7 +137,7 @@ multiply()
 		((i++))
 	done < left 
 	cat mainMult
-	rm -rf left right m1 m2 fixedm2 
+	rm -rf left right m1 m2 fixedm2 mainMult
 }
 
 if [ "$1" == "dims" ]
