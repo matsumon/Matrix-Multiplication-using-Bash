@@ -100,12 +100,44 @@ multiply()
 	read m2_row m2_col < m2
 	if (( $m1_col != $m2_row ))
 	then
-		echo "missmatching matrices"
+		echo "missmatching matrices $m1_col , $m2_row "
 		1>&2
 		exit 1
 	else
 		transpose < right >fixedm2
 	fi
+	while read -a m1_array     
+	do
+		added_element=0
+		q=0
+		while read -a m2_array
+		do
+				for (( d=0; d<$(expr $m2_row); d++ ))
+				do
+				m1_element=${m1_array[d]}
+				m2_element=${m2_array[d]}
+				trans=$(expr ${m1_element} \* ${m2_element})
+				copy=$added_element
+				added_element=$(expr ${copy} + ${trans}) 
+				if (( $d == $(( $m2_row - 1 )) ))
+				then
+					if (( $q == $m2_col-1 || $m2_col == 1 ))
+					then
+						q=0
+					echo -e "$added_element" >> mainMult
+					added_element=0
+					else
+						echo -ne "$added_element\t" >> mainMult
+						added_element=0
+						((q++))
+					fi
+				fi
+				done
+		done < fixedm2
+		((i++))
+	done < left 
+	cat mainMult
+	rm -rf left right m1 m2 fixedm2 
 }
 
 if [ "$1" == "dims" ]
