@@ -4,7 +4,7 @@ dims()
 	then
 		cat $1 > full
 	else
-		cat > full
+			cat > full
 	fi
 	head -n1 < full > temp
 	wc -l < full > dims
@@ -48,12 +48,12 @@ add()
 {
 	if [[ $# != 2 ]]
 	then
-		1>&2
+		1>&2 echo "You didnt upload 2 matrices"
 		exit 1
 	fi
 	if [[ $(dims $1) != $(dims $2) ]]
 	then 
-		1>&2
+		1>&2 echo "Your matrices do not have the proper dimensions"
 		exit 1
 	fi
 	dims $1> d12
@@ -100,8 +100,7 @@ multiply()
 	read m2_row m2_col < m2
 	if (( $m1_col != $m2_row ))
 	then
-		echo "missmatching matrices $m1_col , $m2_row "
-		1>&2
+		1>&2 echo "missmatching matrices $m1_col , $m2_row " 
 		exit 1
 	else
 		transpose < right >fixedm2
@@ -175,6 +174,11 @@ mean()
 
 if [ "$1" == "dims" ]
 then
+	if (( $# > 1 ))
+	then
+		1>&2 echo "Too many arguments to dims"
+		exit 1
+	fi
 	dims $2
 	
 elif [ "$1" == "transpose" ]
@@ -189,4 +193,7 @@ then
 elif [ "$1" == "mean" ]
 then
 	mean $2 
+else
+	1>&2 echo "You either didnt specify a command or your command is invalid"
+	exit 1
 fi
