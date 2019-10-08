@@ -172,18 +172,48 @@ mean()
 
 }
 
+trap 'rm -rf full temp dims main cols rows temp full newFile dim_main m1 m2 testing temp_m2 mainAdd d12 left right m1 m2 fixedm2 mainMult dims_m1 m1 holder mean; exit 1' ERR INT HUP SIGTERM
+
+
 if [ "$1" == "dims" ]
 then
-	if (( $# > 1 ))
+	if (( $# > 2 ))
 	then
 		1>&2 echo "Too many arguments to dims"
 		exit 1
 	fi
-	dims $2
+	if (( $# == 2 ))
+	then
+		if [[ -r $2  ]] 
+		then
+			dims $2
+		else
+			1>&2 echo "Your File Sucks"
+			exit 1
+		fi
+	else
+		dims $2
+	fi
 	
 elif [ "$1" == "transpose" ]
 then
-	transpose $2
+	if (( $# > 2 ))
+	then
+		1>&2 echo "Too Many Arguments"
+		exit 1
+	fi
+	if (( $# == 2 ))
+	then
+		if [[ -r $2 ]]
+		then
+			transpose $2
+		else
+			1>&2 echo "unreadable file"
+			exit 1
+		fi
+	else
+		transpose 
+	fi
 elif [ "$1" == "add" ]
 then
 	add $2 $3
@@ -197,3 +227,4 @@ else
 	1>&2 echo "You either didnt specify a command or your command is invalid"
 	exit 1
 fi
+exit 0
