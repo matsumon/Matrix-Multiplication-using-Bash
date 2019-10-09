@@ -1,3 +1,8 @@
+#Description: Dims takes a matrix and finds its dimensions by using wc to count the number of lines
+# 		for rows and counting the number of words in a line for columns.
+#Input: Requires the user to provided a file as an argument or to pipe a file in.
+#Output: Returns the dimensions of a matrix with rows and columns space seperated.
+
 dims()
 {
 	if [ $# == 1 ]
@@ -16,6 +21,14 @@ dims()
 	rm -rf full temp dims main 
 	return '0'
 }
+
+#Description: The transpose function swaps the i j element of a matrix for the j i element. This function
+#		does this by cutting the columns into a file which uses the translate command to change new line
+# 		characters to tab characters to form rows from columns.  
+#Input: This function requires either a matrix to be piped in or that a matrix be provided as an argument.
+#Output: This function produces a matrix that has its elements swapped from the ith row and jth column to the jth
+#	row and ith column. 
+
 transpose()
 {
 	if [ $# == 1 ]
@@ -44,6 +57,13 @@ transpose()
 	rm -rf cols rows temp full newFile dim_main 
 	return 0
 }
+
+#Description: The add function adds two matrices together. The first matrix is read in using a while loop,
+# 		while the second matrix is read in using a for loop. The desired lines are found by
+#		using a mixture of the head and tail command to properly select the correct line.
+#Input:	The add function requires two equally sized matrices in the arguments of the function.
+#Output: The add function outputs a single matrix that is the sum of the two inputs.
+
 add()
 {
 	if [[ $# != 2 ]]
@@ -89,6 +109,14 @@ add()
 	cat mainAdd
 	rm -rf m1 m2 testing temp_m2 mainAdd d12
 }
+
+#Description: The multiply function multiplies two matrices together as long as m1's column count is 
+#		equal the m2's row count. The first argument corresponds to the left matrix, m1 while the
+#		second argument corresponds to the right matrix, m2. The second matrix is transposed and 
+#		then the two matrices are multplied element by element in the row and finally added together. 
+#Input: The multiply function requires two matrices in which m1's column count is 
+#		equal the m2's row count.
+#Output: A single matrix of size m1's rows by m2's columns.
 
 multiply()
 {
@@ -138,6 +166,15 @@ multiply()
 	cat mainMult
 	rm -rf left right m1 m2 fixedm2 mainMult
 }
+
+#Description: The mean function finds the mean of a given matrix's columns. This is done by 
+# 		transposing the given matrix and then adding the row elements in the tranposed matrix.
+#		Afterwards, a formula is used to derive the mean of the column with rounding going away
+#		from zero.
+#Input: The mean function requires a matrix be given as an argument.
+#Output: The mean function outputs a 1 X number of columns in given matrix with elements corresponding to the
+# 	mean of the columns as a result.
+
 mean()
 {
 	if [ $# == 1 ]
@@ -171,6 +208,14 @@ mean()
 	rm -rf dims_m1 m1 holder mean
 
 }
+
+#Description: The matrix executable decides which command to execute and in some cases tests for correct data.
+#		For example dims and transpose will check that a file is readable and that the user has
+#		provided a matrix through either stdin or as a argument. The matrix will also catch certain 
+#		signals and will proceed to delete temporary files and will provide a nonzero return value.
+#Input: The matrix executable requires that the first argument denote the command. Depending on the command the
+#	user then has the choice to either pipe in matrices or to provided matrices as arguments (which always works).
+#Output: The matrix executable will return a 0 if the command successfuly completes and a 1 after failure. 
 
 trap 'rm -rf full temp dims main cols rows temp full newFile dim_main m1 m2 testing temp_m2 mainAdd d12 left right m1 m2 fixedm2 mainMult dims_m1 m1 holder mean; exit 1' ERR INT HUP SIGTERM
 
