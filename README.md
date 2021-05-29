@@ -1,34 +1,4 @@
-# os1
-
-
-Skip To Content
-Dashboard
-
-Dashboard
-Calendar
-24 unread messages.24
-Inbox
-
-    Help
-
-    OPERATING SYSTEMS I (CS_344_001_F2019)AssignmentsProgram 1 - matrices
-
-Fall 2019
-
-    Home
-    Announcements
-    Syllabus
-    Piazza
-    Slack
-    Assignments
-    Pages
-    Grades
-    Quizzes
-    Files
-    Zoom
-    Academic Support
-    Media Gallery
-    My Media
+# Matrix Multiplication using Bash
 
 Program 1 - matrices
 
